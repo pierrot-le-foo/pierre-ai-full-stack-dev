@@ -1,0 +1,72 @@
+"use client";
+
+import * as React from "react";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+
+interface Brand {
+  name: string;
+  logo: string;
+  onClick?: () => void;
+  imageClassName?: string;
+}
+
+interface BrandsGridProps extends React.HTMLAttributes<HTMLDivElement> {
+  title?: string;
+  brands: Brand[];
+  imageHeight?: number;
+}
+
+export const BrandsGrid = React.forwardRef<HTMLDivElement, BrandsGridProps>(
+  (
+    {
+      className,
+      title = "Trusted and loved by fast-growing companies worldwide",
+      brands,
+      imageHeight = 56, // 14 * 4 = 56px (h-14)
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <div ref={ref} className={cn("py-24", className)} {...props}>
+        <div className="max-w-screen-xl mx-auto px-4 lg:px-8">
+          {title && (
+            <p className="max-w-sm mx-auto text-pretty text-center font-medium mb-6 text-foreground md:text-lg">
+              {title}
+            </p>
+          )}
+
+          <div className="max-w-xs mx-auto grid grid-cols-2 items-center md:grid-cols-3 md:max-w-lg lg:grid-cols-6 lg:max-w-3xl">
+            {brands.map((brand) => (
+              <div
+                key={brand.name}
+                className="flex flex-col items-center justify-center p-4 hover:scale-115 transition-all duration-300"
+                onClick={brand.onClick}
+              >
+                <div className="relative h-[156px] w-full">
+                  <Image
+                    src={brand.logo}
+                    alt={`${brand.name} logo`}
+                    fill
+                    className={cn(
+                      "object-contain grayscale brightness-50  hover:brightness-100 hover:grayscale-0  transition-all duration-300 rounded-2xl",
+                      brand.imageClassName
+                    )}
+                  />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-foreground/50">
+                    {brand.name}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+);
+
+BrandsGrid.displayName = "BrandsGrid";

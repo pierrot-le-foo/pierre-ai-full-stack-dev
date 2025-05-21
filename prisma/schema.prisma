@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model About {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name        String
+  email       String
+  phone       String
+  description String
+  location    String
+}
+
+enum LanguageProficiency {
+  BASIC
+  CONVERSATIONAL
+  FLUENT
+  NATIVE
+}
+
+model SpokenLanguage {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name        String
+  proficiency LanguageProficiency
+  iso         String
+}
+
+enum Seniority {
+  JUNIOR
+  MID
+  SENIOR
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum LocationType {
+  REMOTE
+  ONSITE
+  HYBRID
+}
+
+model ProgrammingLanguage {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name              String
+  simpleIcon        String
+  level             Level
+  yearsOfExperience Int
+  seniority         Seniority
+}
+
+model Framework {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name              String
+  simpleIcon        String
+  level             Level
+  yearsOfExperience Int
+  seniority         Seniority
+}
+
+model Customer {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name        String
+  description String
+  logo        String
+  website     String
+  industry    String
+  Project     Project[]
+  Experience  Experience[]
+  Testimonial Testimonial[]
+}
+
+model Project {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name        String
+  description String
+  image       String
+  url         String
+
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId Int?
+}
+
+model Experience {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  position     String
+  customer     Customer     @relation(fields: [customerId], references: [id])
+  customerId   Int
+  startDate    DateTime
+  endDate      DateTime?
+  locationType LocationType
+  location     String
+}
+
+model Testimonial {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name        String
+  description String
+  image       String
+  position    String
+  customer    Customer @relation(fields: [customerId], references: [id])
+  customerId  Int
+}
